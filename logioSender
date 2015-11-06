@@ -10,9 +10,6 @@ parser.add_argument("Stream", help="Stream name to send under")
 parser.add_argument("Node", help="Node name to send under")
 args = parser.parse_args()
 
-server='log.team6.isucdc.com'
-port=28777
-
 def sendPacket(server, port, message):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((server, port))
@@ -31,4 +28,4 @@ while 1:
         time.sleep(1)
         file.seek(where)
     else:
-        sendPacket(server, port, file.readline())
+        sendPacket("192.168.1.200", 28777, file.readline())
