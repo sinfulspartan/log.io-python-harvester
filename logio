@@ -1,0 +1,7 @@
+#!/bin/bash
+logs=('auth' 'fail2ban' 'ufw' 'mysql')
+hostname=$(hostname)
+
+for i  in "${logs[@]}"; do
+	./logioSender /var/log/"$i.log" $i $hostname &
+done

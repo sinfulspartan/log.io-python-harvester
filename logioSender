@@ -1,0 +1,34 @@
+#!/usr/bin/env python2
+
+import socket
+import argparse
+import time
+import os
+parser = argparse.ArgumentParser(description='Basic Log.io Harvester')
+parser.add_argument("Log", help="Log file to send to server")
+parser.add_argument("Stream", help="Stream name to send under")
+parser.add_argument("Node", help="Node name to send under")
+args = parser.parse_args()
+
+server='log.team6.isucdc.com'
+port=28777
+
+def sendPacket(server, port, message):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((server, port))
+    s.send("+log|" + args.Stream + "|" + args.Node  + "|info|" + message  + "\r\n")
+    s.close()
+
+file = open(args.Log, 'r')
+st_results = os.stat(args.Log)
+st_size = st_results[6]
+file.seek(st_size)
+
+while 1:
+    where = file.tell()
+    line = file.readline()
+    if not line:
+        time.sleep(1)
+        file.seek(where)
+    else:
+        sendPacket(server, port, file.readline())
